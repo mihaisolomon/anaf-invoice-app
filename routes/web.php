@@ -25,7 +25,7 @@ Route::get('/', function () {
 });
 
 Route::any('applications/anaf/{id}/authorize', function ($id, \Illuminate\Http\Request $request) {
-    dump($request->all());
+    dump($request->all(), auth()->user());
 });
 
 Route::get('applications/anaf/{id}/link', function ($id, \Illuminate\Http\Request $request) {
@@ -38,7 +38,7 @@ Route::get('applications/anaf/{id}/link', function ($id, \Illuminate\Http\Reques
     );
 
     $authorizationUrl = $provider->getAuthorizationUrl();
-    
+
     header('Location: ' . $authorizationUrl);
 });
 
