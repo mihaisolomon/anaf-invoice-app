@@ -25,6 +25,32 @@ Route::get('/', function () {
 });
 
 Route::any('applications/anaf/{id}/authorize', function ($id, \Illuminate\Http\Request $request) {
+    $application = \App\Models\AnafApplication::find($id);
+
+    $provider = new \App\Modules\Anaf\OAuth2\Client\Provider\AnafProvider(
+        $application->client_id,
+        $application->client_secret,
+        $application->redirect_uri,
+    );
+
+    if (!auth()->guest()) {
+        $accessToken = $provider->getAccessToken('authorization_code', [
+            'code' => $request->get('code'),
+        ]);
+
+        \App\Models\AnafToken::updateOrInsert([
+            'user_id' => auth()->user(),
+            'anaf_application_id' => $id,
+        ], [
+            'metadata' => json_encode([
+                'access_token' => $accessToken->getToken(),
+                'refresh_token' => $accessToken->getRefreshToken(),
+                'expires_in' => $accessToken->getExpires()
+            ]),
+            'expires_in' => $accessToken->getExpires()
+        ]);
+    }
+
     dump($request->all(), auth()->user());
 });
 
