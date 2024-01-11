@@ -39,7 +39,7 @@ Route::any('applications/anaf/{id}/authorize', function ($id, \Illuminate\Http\R
         ]);
 
         \App\Models\AnafToken::updateOrInsert([
-            'user_id' => auth()->user(),
+            'user_id' => auth()->user()->id,
             'anaf_application_id' => $id,
         ], [
             'metadata' => json_encode([
