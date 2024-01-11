@@ -24,6 +24,24 @@ Route::get('/', function () {
     ]);
 });
 
+Route::any('applications/anaf/{id}/authorize', function ($id, \Illuminate\Http\Request $request) {
+    dump($request->all());
+});
+
+Route::get('applications/anaf/{id}/link', function ($id, \Illuminate\Http\Request $request) {
+    $application = \App\Models\AnafApplication::find($id);
+
+    $provider = new \App\Modules\Anaf\OAuth2\Client\Provider\AnafProvider(
+        $application->client_id,
+        $application->client_secret,
+        $application->redirect_uri,
+    );
+
+    $authorizationUrl = $provider->getAuthorizationUrl();
+    
+    header('Location: ' . $authorizationUrl);
+});
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
