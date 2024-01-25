@@ -1,5 +1,7 @@
 <?php
 
+use App\Modules\Anaf\Http\Controllers\Applications\AuthorizeController;
+use App\Modules\Anaf\Http\Controllers\Applications\GenerateRedirectUrlController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -24,49 +26,10 @@ Route::get('/', function () {
     ]);
 });
 
-Route::any('applications/anaf/{id}/authorize', function ($id, \Illuminate\Http\Request $request) {
-    $application = \App\Models\AnafApplication::find($id);
+Route::any('applications/anaf/{id}/authorize', AuthorizeController::class);
 
-    $provider = new \App\Modules\Anaf\OAuth2\Client\Provider\AnafProvider(
-        $application->client_id,
-        $application->client_secret,
-        $application->redirect_uri,
-    );
+Route::get('applications/anaf/{id}/link', GenerateRedirectUrlController::class);
 
-    if (!auth()->guest()) {
-        $accessToken = $provider->getAccessToken('authorization_code', [
-            'code' => $request->get('code'),
-        ]);
-
-        \App\Models\AnafToken::updateOrInsert([
-            'user_id' => auth()->user()->id,
-            'anaf_application_id' => $id,
-        ], [
-            'metadata' => json_encode([
-                'access_token' => $accessToken->getToken(),
-                'refresh_token' => $accessToken->getRefreshToken(),
-                'expires_in' => $accessToken->getExpires()
-            ]),
-            'expires_in' => $accessToken->getExpires()
-        ]);
-    }
-
-    dump($request->all(), auth()->user());
-});
-
-Route::get('applications/anaf/{id}/link', function ($id, \Illuminate\Http\Request $request) {
-    $application = \App\Models\AnafApplication::find($id);
-
-    $provider = new \App\Modules\Anaf\OAuth2\Client\Provider\AnafProvider(
-        $application->client_id,
-        $application->client_secret,
-        $application->redirect_uri,
-    );
-
-    $authorizationUrl = $provider->getAuthorizationUrl();
-
-    header('Location: ' . $authorizationUrl);
-});
 
 Route::middleware([
     'auth:sanctum',
