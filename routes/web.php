@@ -26,9 +26,27 @@ Route::get('/', function () {
     ]);
 });
 
+Route::get('/testing-gdrive-oauth', function () {
+    $credentials = storage_path('gdrive') . '/' . env('GDRIVE_FILE_PATH');
+
+    $client = new Google\Client();
+    $client->setAuthConfig($credentials);
+    $client->setRedirectUri(env('GDRIVE_REDIRECT_URI'));
+    $client->addScope("https://www.googleapis.com/auth/drive");
+    $service = new Google\Service\Drive($client);
+
+    $authUrl = $client->createAuthUrl();
+    dump($authUrl);
+});
+
+Route::any('/applications/gdrive/authorize', function (\Illuminate\Http\Request $request) {
+    dump($request);
+});
+
 Route::any('applications/anaf/{id}/authorize', AuthorizeController::class);
 
 Route::get('applications/anaf/{id}/link', GenerateRedirectUrlController::class);
+
 
 
 Route::middleware([
