@@ -40,7 +40,16 @@ Route::get('/testing-gdrive-oauth', function () {
 });
 
 Route::any('/applications/gdrive/authorize', function (\Illuminate\Http\Request $request) {
-    dump($request);
+    $credentials = storage_path('gdrive') . '/' . env('GDRIVE_FILE_PATH');
+
+    $client = new Google\Client();
+    $client->setAuthConfig($credentials);
+    $client->setRedirectUri(env('GDRIVE_REDIRECT_URI'));
+    $client->addScope("https://www.googleapis.com/auth/drive");
+
+    $token = $client->fetchAccessTokenWithAuthCode($request->get('code'));
+    
+    dump($token);
 });
 
 Route::any('applications/anaf/{id}/authorize', AuthorizeController::class);
