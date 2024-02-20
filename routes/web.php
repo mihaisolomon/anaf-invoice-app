@@ -48,7 +48,7 @@ Route::any('/applications/gdrive/authorize', function (\Illuminate\Http\Request 
     $client->addScope("https://www.googleapis.com/auth/drive");
 
     $token = $client->fetchAccessTokenWithAuthCode($request->get('code'));
-    
+
     dump($token);
 });
 
@@ -65,5 +65,9 @@ Route::middleware([
 ])->group(function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
+    })->name('dashboard');
+
+    Route::get('/applications/anaf/create', function () {
+        return Inertia::render('Anaf/Applications/Create');
     })->name('dashboard');
 });
