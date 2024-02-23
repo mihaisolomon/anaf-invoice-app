@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Modules\Anaf\Models;
 
 use App\Modules\Anaf\Casts\Json;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

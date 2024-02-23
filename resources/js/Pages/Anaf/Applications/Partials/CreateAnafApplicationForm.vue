@@ -12,7 +12,7 @@ const form = useForm({
 });
 
 const createAnafApplication = () => {
-    form.post(route('teams.store'), {
+    form.post(route('anaf.applications.store'), {
         errorBag: 'createAnafApplication',
         preserveScroll: true,
     });

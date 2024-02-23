@@ -1,5 +1,6 @@
 <?php
 
+use App\Modules\Anaf\Http\Controllers\Applications\AnafApplicationController;
 use App\Modules\Anaf\Http\Controllers\Applications\AuthorizeController;
 use App\Modules\Anaf\Http\Controllers\Applications\GenerateRedirectUrlController;
 use Illuminate\Foundation\Application;
@@ -52,7 +53,7 @@ Route::any('/applications/gdrive/authorize', function (\Illuminate\Http\Request 
     dump($token);
 });
 
-Route::any('applications/anaf/{id}/authorize', AuthorizeController::class);
+Route::any('applications/anaf/{id}/authorize', AuthorizeController::class)->name('anaf.application.authorize');
 
 Route::get('applications/anaf/{id}/link', GenerateRedirectUrlController::class);
 
@@ -66,6 +67,8 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+
+    Route::post('/applications/anaf/create', [AnafApplicationController::class, 'store'])->name('anaf.applications.store');
 
     Route::get('/applications/anaf/create', function () {
         return Inertia::render('Anaf/Applications/Create');
