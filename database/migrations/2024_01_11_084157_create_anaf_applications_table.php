@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('anaf_applications', function (Blueprint $table) {
             $table->id();
+
             $table->unsignedBigInteger('team_id');
 
             $table->string('client_id');

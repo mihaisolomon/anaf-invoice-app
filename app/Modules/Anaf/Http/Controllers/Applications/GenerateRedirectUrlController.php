@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Anaf\Http\Controllers\Applications;
 
 use App\Http\Controllers\Controller;
-use App\Models\AnafApplication;
+use App\Modules\Anaf\Models\AnafApplication;
 use App\Modules\Anaf\OAuth2\Client\Provider\AnafProvider;
 
 class GenerateRedirectUrlController extends Controller
